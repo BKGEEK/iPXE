@@ -1,0 +1,23 @@
+#!ipxe
+
+# 设置 memdisk 和 ISO URL（替换为实际 URL）
+set memdisk_url http://your-server.com/memdisk
+set iso_url http://your-server.com/install.iso
+
+# 可选：提示用户
+# echo Fetching memdisk from ${memdisk_url} and ISO from ${iso_url}...
+
+# 加载 ISO 到内存作为 initrd（显示下载进度）
+initrd ${iso_url} || goto download_failed
+
+# 链加载 memdisk 并引导 ISO（iso raw 用于 ISO 格式）
+chain ${memdisk_url} iso raw || goto boot_failed
+
+# 错误处理
+:download_failed
+echo Failed to download ISO. Check URL, network, or server support for ranges.
+exit
+
+:boot_failed
+echo Failed to boot with memdisk. Ensure memdisk is valid and RAM sufficient.
+exit
