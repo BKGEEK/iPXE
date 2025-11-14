@@ -1,23 +1,17 @@
 #!ipxe
-
-# 设置 memdisk 和 ISO URL（替换为实际 URL）
-set memdisk_url https://raw.githubusercontent.com/BKGEEK/iPXE-memdisk/master/memdisk
-set iso_url https://repo.virtuozzo.com/vzlinux/8/iso/vzlinux-8-min.iso
-
+# 设置 kernel 和 initrd URL（替换为您的服务器路径）
+set kernel_url http://your-server/vmlinuz
+set initrd_url http://your-server/initrd.img
 # 可选：提示用户
-# echo Fetching memdisk from ${memdisk_url} and ISO from ${iso_url}...
-
-# 加载 ISO 到内存作为 initrd（显示下载进度）
-initrd ${iso_url} || goto download_failed
-
-# 链加载 memdisk 并引导 ISO（iso raw 用于 ISO 格式）
-chain ${memdisk_url} iso raw || goto boot_failed
-
-# 错误处理
-:download_failed
-echo Failed to download ISO. Check URL, network, or server support for ranges.
-exit
-
-:boot_failed
-echo Failed to boot with memdisk. Ensure memdisk is valid and RAM sufficient.
-exit
+echo Booting VzLinux 8 from PXE...
+# 加载 kernel（添加 Anaconda 参数：inst.stage2 指定安装源，quiet 静默，ip=dhcp 网络）
+kernel ${kernel_url} \
+    inst.stage2=http://your-server/vzlinux-8-min.iso \
+    inst.repo=http://your-server/vzlinux-8-min.iso \
+    inst.ks=http://your-server/kickstart.cfg \ # 可选：Kickstart 自动化安装
+    quiet \
+    ip=dhcp \
+# 加载 initrd
+initrd ${initrd_url}
+# 引导
+boot 引导到安装界面然后手动安装即可
