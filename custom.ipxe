@@ -1,6 +1,6 @@
 #!ipxe
 
-set mirror http://10.0.0.1/vzlinux/9/os
-kernel ${mirror}/images/pxeboot/vmlinuz initrd=initrd.img inst.repo=https://repo.virtuozzo.com/vzlinux/8/x86_64/os/repodata/
-initrd ${mirror}/images/pxeboot/initrd.img
+set mirror https://ftp.orgv.eu
+kernel ${mirror}/vmlinuz initrd=initrd.img inst.repo=https://repo.virtuozzo.com/vzlinux/8/x86_64/os/repodata/
+initrd ${mirror}/initrd.img
 boot
