@@ -1,29 +1,18 @@
 #!ipxe
-
 # --- 1. 定义变量 ---
 # 服务器 A: 托管内核和 Initrd 的 Web 服务器地址 (Boot Server)
 set boot_server http://ftp.orgv.eu
-
 # 服务器 B: 托管安装源 (Packages) 的 Web 服务器地址 (Repo Server)
 set repo_server http://repo.virtuozzo.com
 # 安装源在服务器 B 上的路径 (例如 /vzlinux/8/BaseOS/x86_64/os)
 set repo_path /vzlinux/8/BaseOS/x86_64/os
-
 # --- 2. 引导配置 (手动安装) ---
 echo 启动 VzLinux 8 安装...
 echo 引导文件来自 ${boot_server}
 echo 安装源来自 ${repo_server}${repo_path}
-
-# 加载内核 (Kernel) - 使用 boot_server
-# 假设 vmlinuz 位于 boot_server 的根目录
-kernel ${boot_server}/vmlinuz \
-  # inst.repo 指定了安装源的独立位置 (使用 repo_server 和 repo_path)
-  inst.repo=${repo_server}${repo_path} \
-  console=tty0 console=ttyS0,115200n8 
-
+# 加载内核 (Kernel) - 使用 boot_server (单行参数)
+kernel ${boot_server}/vmlinuz inst.repo=${repo_server}${repo_path} console=tty0 console=ttyS0,115200n8 rd.live.check=0
 # 加载初始内存盘 (Initrd) - 使用 boot_server
-# 假设 initrd.img 位于 boot_server 的根目录
 initrd ${boot_server}/initrd.img
-
 # 启动引导
 boot
